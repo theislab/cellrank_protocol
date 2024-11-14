@@ -9,7 +9,7 @@
 # %%
 import scanpy as sc
 
-from fancypackage import DATA_DIR, FIG_DIR
+from crp import DATA_DIR, FIG_DIR
 
 # %% [markdown]
 # ## General settings
