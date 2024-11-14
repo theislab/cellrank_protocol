@@ -3,21 +3,21 @@ requires = ['setuptools', 'setuptools_scm']
 build-backend = 'setuptools.build_meta'
 
 [project]
-name = "fancypackage"
+name = "crp"
 version = "0.0.0"
-description = "Fancy Package"
+description = "CellRank protocols as shown in the corresponding Nature Protocols article."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {file = "LICENSE"}
 authors = [
-    {name = "Jane Doe"},
+    {name = "Philipp Weiler"},
 ]
 maintainers = [
-    {name = "Jane Doe", email = "jane.doe@usa.com"},
+    {name = "Philipp Weiler", email = "philipp.weiler@tum.de"},
 ]
 urls.Documentation = "https://todo.com"  # TODO
-urls.Source = "https://github.com/url/to/repo.git"
-urls.Home-page = "https://github.com/url/to/repo.git"
+urls.Source = "https://github.com/WeilerP/cellrank_protocol.git"
+urls.Home-page = "https://github.com/WeilerP/cellrank_protocol.git"
 dependencies = [
     "anndata",
     "scanpy",
