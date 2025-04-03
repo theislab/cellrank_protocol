@@ -21,11 +21,21 @@ urls.Home-page = "https://github.com/WeilerP/cellrank_protocol.git"
 dependencies = [
     "anndata",
     "scanpy",
+    "palantir",
+    "moscot",
+    "mplscience",
+    "pyarrow",
+    "scipy<1.14",
+    "zarr<3",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pre-commit",
+]
+jupyter = [
+    "jupyterlab",
+    "ipywidgets"
 ]
 
 [tool.black]
