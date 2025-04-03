@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Application of the VelocityKernel
 #
-# In this analysis, we infer cell-cell transition probabilities using the VelocityKernel.
+# In this analysis, we infer cell-cell transition probabilities using the VelocityKernel and show how to combine two kernels.
 
 # %% [markdown]
 # ## Library imports

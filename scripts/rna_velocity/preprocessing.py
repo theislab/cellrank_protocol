@@ -1,17 +1,13 @@
 # %% [markdown]
 # # RNA velocity in spermatogenesis
 #
-# RNA velocity analysis with the *VI model* using data preprocessed with `velocyto`.
-
-# %% [markdown]
-# **Requires**
+# RNA velocity analysis with the *EM model* using data preprocessed with `velocyto`. The required data can be downloaded
+# [here](https://figshare.com/ndownloader/files/53395004) from FigShare and is expected to be in `data/spermatogenesis/raw/`, _i.e._,
 #
-# * `adata_generation.ipynb`
-#
-# **Output**
-#
-# * `velocyto_var_names.csv`
-# * `DATA_DIR/spermatogenesis/velocities/velocyto_velovi.npy`
+# ```bash
+# mkdir -p ../../data/spermatogenesis/raw/
+# wget https://figshare.com/ndownloader/files/53395004 -O ../../data/spermatogenesis/raw/adata.h5ad
+# ```
 
 # %% [markdown]
 # ## Library imports
