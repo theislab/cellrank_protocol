@@ -1,9 +1,6 @@
 format: jb-book
 root: index
 parts:
-    - caption: Template
-      chapters:
-
     - caption: CytoTRACEKernel
       chapters:
           - file: cytrotrace/cellrank
