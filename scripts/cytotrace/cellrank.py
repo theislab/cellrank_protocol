@@ -4,6 +4,15 @@
 # In this analysis, we use the CytoTRACEKernel to recover human bone marrow development. To run the analysis, ensure that
 # the processed data is either already saved, or generate it using the corresponding notebook in the `pseudotime/`
 # directory.
+#
+# The corresponding data can be generated through the preprocessing notebooks `pseudotime/preprocessing.ipynb`, or
+# downloaded driectly from [here](https://figshare.com/ndownloader/files/53394941) and should be
+# saved in `data/bone_marrow/processed/adata.h5ad`, _i.e._,
+#
+# ```bash
+# mkdir -p ../../data/bone_marrow/processed/
+# wget https://figshare.com/ndownloader/files/53394941 -O ../../data/bone_marrow/processed/adata.h5ad
+# ```
 
 # %% [markdown]
 # ## Library imports

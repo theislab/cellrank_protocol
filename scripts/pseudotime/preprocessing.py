@@ -4,6 +4,14 @@
 # Here, we process a [human hematopoiesis dataset](https://doi.org/10.1038/s41587-023-01716-9) to infer the underlying
 # dynamics with CellRank in further analyses. This workflow includes the standard preprocessing steps of scRNA-seq data,
 # and the inference of a pseudotime with [Palantir](https://doi.org/10.1038/s41587-019-0068-4).
+#
+# The corresponding data can be downloaded from [here](https://figshare.com/ndownloader/files/53393684) and should be
+# saved in `data/bone_marrow/raw/adata.h5ad`, _i.e._,
+#
+# ```bash
+# mkdir -p ../../data/bone_marrow/raw/
+# wget https://figshare.com/ndownloader/files/53393684 -O ../../data/bone_marrow/raw/adata.h5ad
+# ```
 
 # %% [markdown]
 # ## Library imports
