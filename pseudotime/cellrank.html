@@ -1,0 +1,1681 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Human hematopoiesis analysis with the PseudotimeKernel &#8212; CellRank protocol</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pseudotime/cellrank';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Inferring transition probabilities from time-resolved single-cell data" href="../realtime/cellrank.html" />
+    <link rel="prev" title="Human hematopoiesis - data preprocessing" href="preprocessing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">CellRank protocol</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    CellRank protocols
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">PseudotimeKernel</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="preprocessing.html">Human hematopoiesis - data preprocessing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Human hematopoiesis analysis with the PseudotimeKernel</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">RealTimeKernel</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../realtime/cellrank.html">Inferring transition probabilities from time-resolved single-cell data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">VelocityKernel</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../velocity/preprocessing.html">RNA velocity in spermatogenesis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../velocity/cellrank.html">Application of the VelocityKernel</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/theislab/cellrank_protocol" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/pseudotime/cellrank.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Human hematopoiesis analysis with the PseudotimeKernel</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#library-imports">Library imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-settings">General settings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constants">Constants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-definitions">Function definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-loading">Data loading</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudotimekernel">PseudotimeKernel</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel">Kernel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimator">Estimator</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="human-hematopoiesis-analysis-with-the-pseudotimekernel">
+<h1>Human hematopoiesis analysis with the PseudotimeKernel<a class="headerlink" href="#human-hematopoiesis-analysis-with-the-pseudotimekernel" title="Link to this heading">#</a></h1>
+<p>In this analysis, we recapitulate human bone marrow development with the PseudotimeKernel, relying on pseudotime
+estimates computed with Palantir. To run the analysis, ensure that the processed data is either already saved, or
+generate it using the corresponding notebook <code class="docutils literal notranslate"><span class="pre">preprocessing.ipynb</span></code>.</p>
+<p>The corresponding data can be generated through the preprocessing notebooks <code class="docutils literal notranslate"><span class="pre">pseudotime/preprocessing.ipynb</span></code>, or
+downloaded driectly from <a class="reference external" href="https://figshare.com/ndownloader/files/53394941">here</a> and should be
+saved in <code class="docutils literal notranslate"><span class="pre">data/bone_marrow/processed/adata.h5ad</span></code>, <em>i.e.</em>,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>../../data/bone_marrow/processed/
+wget<span class="w"> </span>https://figshare.com/ndownloader/files/53394941<span class="w"> </span>-O<span class="w"> </span>../../data/bone_marrow/processed/adata.h5ad
+</pre></div>
+</div>
+<section id="library-imports">
+<h2>Library imports<a class="headerlink" href="#library-imports" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_ind</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mplscience</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Patch</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellrank</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scvelo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">scv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">crp</span><span class="w"> </span><span class="kn">import</span> <span class="n">DATA_DIR</span><span class="p">,</span> <span class="n">FIG_DIR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">crp.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">G2M_GENES</span><span class="p">,</span> <span class="n">S_GENES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">crp.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_tsi</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="general-settings">
+<h2>General settings<a class="headerlink" href="#general-settings" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">cr</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;module://matplotlib_inline.backend_inline&quot;</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;backend&quot;</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.family&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sans-serif&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.sans-serif&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Arial&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">set_figure_params</span><span class="p">(</span><span class="s2">&quot;scvelo&quot;</span><span class="p">,</span> <span class="n">dpi_save</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color_map</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SAVE_FIGURES</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">FIGURE_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;svg&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SAVE_RESULTS</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">if</span> <span class="n">SAVE_RESULTS</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;bone_marrow&quot;</span> <span class="o">/</span> <span class="s2">&quot;results&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TERMINAL_STATES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Ery&quot;</span><span class="p">,</span> <span class="s2">&quot;CLP&quot;</span><span class="p">,</span> <span class="s2">&quot;cDC&quot;</span><span class="p">,</span> <span class="s2">&quot;pDC&quot;</span><span class="p">,</span> <span class="s2">&quot;Mono&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">STATE_TRANSITIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;HSC&quot;</span><span class="p">,</span> <span class="s2">&quot;MEP&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;MEP&quot;</span><span class="p">,</span> <span class="s2">&quot;Ery&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;HSC&quot;</span><span class="p">,</span> <span class="s2">&quot;HMP&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;HMP&quot;</span><span class="p">,</span> <span class="s2">&quot;Mono&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;HMP&quot;</span><span class="p">,</span> <span class="s2">&quot;CLP&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;HMP&quot;</span><span class="p">,</span> <span class="s2">&quot;DCPre&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;DCPre&quot;</span><span class="p">,</span> <span class="s2">&quot;pDC&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;DCPre&quot;</span><span class="p">,</span> <span class="s2">&quot;cDC&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SIGNIFICANCE_PALETTE</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;n.s.&quot;</span><span class="p">:</span> <span class="s2">&quot;#dedede&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="s2">&quot;#90BAAD&quot;</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">:</span> <span class="s2">&quot;#A1E5AB&quot;</span><span class="p">,</span> <span class="s2">&quot;***&quot;</span><span class="p">:</span> <span class="s2">&quot;#ADF6B1&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="function-definitions">
+<h2>Function definitions<a class="headerlink" href="#function-definitions" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_significance</span><span class="p">(</span><span class="n">pvalue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assign significance symbol based on p-value.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pvalue</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;***&quot;</span>
+    <span class="k">elif</span> <span class="n">pvalue</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;**&quot;</span>
+    <span class="k">elif</span> <span class="n">pvalue</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;*&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;n.s.&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_ttest_res</span><span class="p">(</span><span class="n">cbc</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform t tests to assess CBC difference.&quot;&quot;&quot;</span>
+    <span class="n">ttest_res</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">significances</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">STATE_TRANSITIONS</span><span class="p">:</span>
+        <span class="n">obs_mask</span> <span class="o">=</span> <span class="n">cbc</span><span class="p">[</span><span class="s2">&quot;State transition&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">cbc</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">obs_mask</span><span class="p">,</span> <span class="s2">&quot;Log ratio&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+        <span class="n">ttest_res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">)</span>
+        <span class="n">significances</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_significance</span><span class="p">(</span><span class="n">ttest_res</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pvalue</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ttest_res</span><span class="p">,</span> <span class="n">significances</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_palette</span><span class="p">(</span><span class="n">significances</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a color palette for statistical significance.&quot;&quot;&quot;</span>
+    <span class="n">palette</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">state_transition</span><span class="p">:</span> <span class="n">SIGNIFICANCE_PALETTE</span><span class="p">[</span><span class="n">significance</span><span class="p">]</span> <span class="k">for</span> <span class="n">state_transition</span><span class="p">,</span> <span class="n">significance</span> <span class="ow">in</span> <span class="n">significances</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">palette</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_cbc_ratio</span><span class="p">(</span><span class="n">cbc</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">palette</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">fpath</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot the CBC ratio, colored by significance, to compare kernel performance.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+
+        <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">cbc</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;State transition&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Log ratio&quot;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+
+        <span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Patch</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">SIGNIFICANCE_PALETTE</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+            <span class="n">handles</span><span class="o">=</span><span class="n">handles</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;n.s.&quot;</span><span class="p">,</span> <span class="s2">&quot;p&lt;1e-1&quot;</span><span class="p">,</span> <span class="s2">&quot;p&lt;1e-2&quot;</span><span class="p">,</span> <span class="s2">&quot;p&lt;1e-3&quot;</span><span class="p">],</span>
+            <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower center&quot;</span><span class="p">,</span>
+            <span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">fpath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-loading">
+<h2>Data loading<a class="headerlink" href="#data-loading" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;bone_marrow&quot;</span> <span class="o">/</span> <span class="s2">&quot;processed&quot;</span> <span class="o">/</span> <span class="s2">&quot;adata.h5ad&quot;</span><span class="p">)</span>
+<span class="n">adata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 6881 × 1500
+    obs: &#39;leiden&#39;, &#39;celltype&#39;, &#39;n_counts&#39;, &#39;palantir_pseudotime&#39;
+    var: &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;celltype_colors&#39;, &#39;hvg&#39;, &#39;log1p&#39;, &#39;neighbors&#39;, &#39;pca&#39;, &#39;umap&#39;
+    obsm: &#39;X_diffmap&#39;, &#39;X_pca&#39;, &#39;X_umap&#39;
+    varm: &#39;PCs&#39;
+    layers: &#39;MAGIC_imputed_data&#39;
+    obsp: &#39;connectivities&#39;, &#39;distances&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pseudotimekernel">
+<h2>PseudotimeKernel<a class="headerlink" href="#pseudotimekernel" title="Link to this heading">#</a></h2>
+<section id="kernel">
+<h3>Kernel<a class="headerlink" href="#kernel" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ptk</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">PseudotimeKernel</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">time_key</span><span class="o">=</span><span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">)</span>
+<span class="n">ptk</span><span class="o">.</span><span class="n">compute_transition_matrix</span><span class="p">(</span><span class="n">threshold_scheme</span><span class="o">=</span><span class="s2">&quot;soft&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing transition matrix based on pseudotime
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4ae255e52a6941fba15c7f09dce186f4", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Finish (0:00:00)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PseudotimeKernel[n=6881, dnorm=False, scheme=&#39;soft&#39;, b=10.0, nu=0.5]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+        <span class="n">dpi</span> <span class="o">=</span> <span class="mi">400</span>
+        <span class="n">save</span> <span class="o">=</span> <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="s2">&quot;umap_rws.png&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dpi</span> <span class="o">=</span> <span class="mi">150</span>
+        <span class="n">save</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ptk</span><span class="o">.</span><span class="n">plot_random_walks</span><span class="p">(</span>
+        <span class="n">start_ixs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;celltype&quot;</span><span class="p">:</span> <span class="s2">&quot;HSC&quot;</span><span class="p">},</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating `100` random walks of maximum length `1721`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4096361b476541ccb5bea4a037145137", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Finish (0:00:08)
+Plotting random walks
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/2f145409f198fdffc19399e81a76f9574bed6fc98d20dcb920c5e91c53aecbe6.png"><img alt="../_images/2f145409f198fdffc19399e81a76f9574bed6fc98d20dcb920c5e91c53aecbe6.png" src="../_images/2f145409f198fdffc19399e81a76f9574bed6fc98d20dcb920c5e91c53aecbe6.png" style="width: 732px; height: 714px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">ptk</span><span class="o">.</span><span class="n">plot_random_walks</span><span class="p">(</span><span class="n">start_ixs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]},</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating `100` random walks of maximum length `1721`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c8cd6da41d07457da97e15cd1a2cf645", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Finish (0:00:08)
+Plotting random walks
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/87fcfab5f49c1d4eadc978797c61cdd50c7b04bd5ca066345a500b217f7c7e01.png"><img alt="../_images/87fcfab5f49c1d4eadc978797c61cdd50c7b04bd5ca066345a500b217f7c7e01.png" src="../_images/87fcfab5f49c1d4eadc978797c61cdd50c7b04bd5ca066345a500b217f7c7e01.png" style="width: 498px; height: 486px;" />
+</a>
+</div>
+</div>
+</section>
+<section id="estimator">
+<h3>Estimator<a class="headerlink" href="#estimator" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">estimators</span><span class="o">.</span><span class="n">GPCCA</span><span class="p">(</span><span class="n">ptk</span><span class="p">)</span>
+<span class="n">estimator</span><span class="o">.</span><span class="n">compute_schur</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+        <span class="n">save</span> <span class="o">=</span> <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;spectrum.</span><span class="si">{</span><span class="n">FIGURE_FORMAT</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">save</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_spectrum</span><span class="p">(</span><span class="n">real_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing Schur decomposition
+Adding `adata.uns[&#39;eigendecomposition_fwd&#39;]`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:03)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/ef61f9be78d820a8106e371a2e9aea1c738f137fc018ba922a80809649e42bb8.png"><img alt="../_images/ef61f9be78d820a8106e371a2e9aea1c738f137fc018ba922a80809649e42bb8.png" src="../_images/ef61f9be78d820a8106e371a2e9aea1c738f137fc018ba922a80809649e42bb8.png" style="width: 586px; height: 323px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span><span class="o">.</span><span class="n">compute_macrostates</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">cluster_key</span><span class="o">=</span><span class="s2">&quot;celltype&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="s2">&quot;5_macrostates.png&quot;</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+            <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing `5` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:656: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  smp = ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:694: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1396: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=bg_size, marker=&quot;.&quot;, c=bg_color, zorder=zord - 2, **kwargs)
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1397: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=gp_size, marker=&quot;.&quot;, c=gp_color, zorder=zord - 1, **kwargs)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/58c26ee7077ce36752985f34cdec763338d80e3afd889bf096e4558118e7f78b.png"><img alt="../_images/58c26ee7077ce36752985f34cdec763338d80e3afd889bf096e4558118e7f78b.png" src="../_images/58c26ee7077ce36752985f34cdec763338d80e3afd889bf096e4558118e7f78b.png" style="width: 340px; height: 259px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_key</span> <span class="o">=</span> <span class="s2">&quot;celltype&quot;</span>
+
+<span class="n">tsi_score</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">tsi</span><span class="p">(</span><span class="n">n_macrostates</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">terminal_states</span><span class="o">=</span><span class="n">TERMINAL_STATES</span><span class="p">,</span> <span class="n">cluster_key</span><span class="o">=</span><span class="n">cluster_key</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TSI score: </span><span class="si">{</span><span class="n">tsi_score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing `15` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:21)
+Computing `14` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:14)
+Computing `13` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:07)
+Computing `12` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:03)
+Computing `11` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:03)
+Computing `10` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:03)
+Computing `9` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:01)
+Computing `8` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:01)
+Computing `7` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+Computing `6` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+Computing `5` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+Computing `4` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+Computing `3` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+Computing `2` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+For 1 macrostate, stationary distribution is computed
+Computing eigendecomposition of the transition matrix
+DEBUG: Computing top `20` eigenvalues of a sparse matrix
+DEBUG: Sorting eigenvalues by their real part
+Adding `adata.uns[&#39;eigendecomposition_fwd&#39;]`
+       `.eigendecomposition`
+    Finish (0:00:00)
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+TSI score: 0.97
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/anndata/_core/aligned_df.py:68: ImplicitModificationWarning: Transforming to str index.
+  warnings.warn(&quot;Transforming to str index.&quot;, ImplicitModificationWarning)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">palette</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;PseudotimeKernel&quot;</span><span class="p">:</span> <span class="s2">&quot;#DE8F05&quot;</span><span class="p">,</span> <span class="s2">&quot;Optimal identification&quot;</span><span class="p">:</span> <span class="s2">&quot;#000000&quot;</span><span class="p">}</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_tsi</span><span class="p">(</span><span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/6e87efd57075d5d91d4bb09dbaddea1825fb0a21b95cc4dd5c1df389e6f8070b.png"><img alt="../_images/6e87efd57075d5d91d4bb09dbaddea1825fb0a21b95cc4dd5c1df389e6f8070b.png" src="../_images/6e87efd57075d5d91d4bb09dbaddea1825fb0a21b95cc4dd5c1df389e6f8070b.png" style="width: 469px; height: 348px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span><span class="o">.</span><span class="n">compute_macrostates</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">cluster_key</span><span class="o">=</span><span class="s2">&quot;celltype&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="s2">&quot;6_macrostates.png&quot;</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+            <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing `6` macrostates
+DEBUG: Setting the macrostates using macrostates memberships
+DEBUG: Raising an exception if there are less than `6` cells.
+Adding `.macrostates`
+       `.macrostates_memberships`
+       `.coarse_T`
+       `.coarse_initial_distribution
+       `.coarse_stationary_distribution`
+       `.schur_vectors`
+       `.schur_matrix`
+       `.eigendecomposition`
+    Finish (0:00:00)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:656: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  smp = ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:694: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1396: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=bg_size, marker=&quot;.&quot;, c=bg_color, zorder=zord - 2, **kwargs)
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1397: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=gp_size, marker=&quot;.&quot;, c=gp_color, zorder=zord - 1, **kwargs)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/64010fc8deaf1c197df2f484f3c6550a1abbf5144acc781f495ca277b86595ef.png"><img alt="../_images/64010fc8deaf1c197df2f484f3c6550a1abbf5144acc781f495ca277b86595ef.png" src="../_images/64010fc8deaf1c197df2f484f3c6550a1abbf5144acc781f495ca277b86595ef.png" style="width: 340px; height: 259px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span><span class="o">.</span><span class="n">predict_terminal_states</span><span class="p">()</span>
+<span class="c1"># estimator.set_terminal_states(TERMINAL_STATES)</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;terminal&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;terminal&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="s2">&quot;terminal_states_inferred.png&quot;</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+            <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG: Raising an exception if there are less than `6` cells.
+Adding `adata.obs[&#39;term_states_fwd&#39;]`
+       `adata.obs[&#39;term_states_fwd_probs&#39;]`
+       `.terminal_states`
+       `.terminal_states_probabilities`
+       `.terminal_states_memberships
+    Finish`
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:656: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  smp = ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:694: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1396: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=bg_size, marker=&quot;.&quot;, c=bg_color, zorder=zord - 2, **kwargs)
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1397: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=gp_size, marker=&quot;.&quot;, c=gp_color, zorder=zord - 1, **kwargs)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/64010fc8deaf1c197df2f484f3c6550a1abbf5144acc781f495ca277b86595ef.png"><img alt="../_images/64010fc8deaf1c197df2f484f3c6550a1abbf5144acc781f495ca277b86595ef.png" src="../_images/64010fc8deaf1c197df2f484f3c6550a1abbf5144acc781f495ca277b86595ef.png" style="width: 340px; height: 259px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span><span class="o">.</span><span class="n">compute_fate_probabilities</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_fate_probabilities</span><span class="p">(</span><span class="n">same_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+    <span class="n">bdata</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">bdata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">estimator</span><span class="o">.</span><span class="n">fate_probabilities</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">fate_probabilities</span><span class="o">.</span><span class="n">X</span>
+
+    <span class="k">for</span> <span class="n">lineage</span> <span class="ow">in</span> <span class="n">estimator</span><span class="o">.</span><span class="n">fate_probabilities</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+            <span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">bdata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">lineage</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+                <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lineage</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_fate_terminal_pred.png&quot;</span><span class="p">,</span>
+                <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+                <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">bdata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing fate probabilities
+DEBUG: Solving the linear system using `PETSc` solver `&#39;gmres&#39;` on `1` core(s) with no preconditioner and `tol=1e-06`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "703fe9deafd44d08906de5acbb7738b7", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Adding `adata.obsm[&#39;lineages_fwd&#39;]`
+       `.fate_probabilities`
+    Finish (0:00:00)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/587ca3ef78a61776e14dfeee769f68efba63c4360aba07af1b37e8f355f593ff.png"><img alt="../_images/587ca3ef78a61776e14dfeee769f68efba63c4360aba07af1b37e8f355f593ff.png" src="../_images/587ca3ef78a61776e14dfeee769f68efba63c4360aba07af1b37e8f355f593ff.png" style="width: 1535px; height: 283px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+    <span class="n">save</span> <span class="o">=</span> <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;circular_projection.</span><span class="si">{</span><span class="n">FIGURE_FORMAT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">save</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">cr</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">circular_projection</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">cluster_key</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="n">save</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG: Set ordering to `optimal`
+Solving TSP for `6` states
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/03260f6f638296051525b8a84798aab897be30f85ce30694f7a9665730a3b5ec.png"><img alt="../_images/03260f6f638296051525b8a84798aab897be30f85ce30694f7a9665730a3b5ec.png" src="../_images/03260f6f638296051525b8a84798aab897be30f85ce30694f7a9665730a3b5ec.png" style="width: 394px; height: 304px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drivers</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">compute_lineage_drivers</span><span class="p">(</span>
+    <span class="n">return_drivers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cluster_key</span><span class="o">=</span><span class="s2">&quot;celltype&quot;</span><span class="p">,</span> <span class="n">lineages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;MEP&quot;</span><span class="p">],</span> <span class="n">clusters</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;HSC&quot;</span><span class="p">,</span> <span class="s2">&quot;MEP&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_lineage_drivers</span><span class="p">(</span><span class="n">lineage</span><span class="o">=</span><span class="s2">&quot;MEP&quot;</span><span class="p">,</span> <span class="n">n_genes</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">title_fmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{gene}</span><span class="s2"> corr=</span><span class="si">{corr:.2}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG: Computing correlations for lineages `[&#39;MEP&#39;]` restricted to clusters `[&#39;HSC&#39;, &#39;MEP&#39;]` in layer `X` with `use_raw=False`
+Adding `adata.varm[&#39;terminal_lineage_drivers&#39;]`
+       `.lineage_drivers`
+    Finish (0:00:00)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/21c80033516c9dacc4baf0f6514e63420a2b9ac14eb7a9b2cab65521fd71dff3.png"><img alt="../_images/21c80033516c9dacc4baf0f6514e63420a2b9ac14eb7a9b2cab65521fd71dff3.png" src="../_images/21c80033516c9dacc4baf0f6514e63420a2b9ac14eb7a9b2cab65521fd71dff3.png" style="width: 1900px; height: 1012px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gene_names</span> <span class="o">=</span> <span class="n">drivers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="o">~</span><span class="p">(</span><span class="n">drivers</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;MT.&quot;</span><span class="p">,</span> <span class="s2">&quot;RPL&quot;</span><span class="p">,</span> <span class="s2">&quot;RPS&quot;</span><span class="p">,</span> <span class="s2">&quot;^HB[^(p)]&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">drivers</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">S_GENES</span> <span class="o">+</span> <span class="n">G2M_GENES</span><span class="p">)),</span>
+    <span class="p">:,</span>
+<span class="p">]</span><span class="o">.</span><span class="n">index</span>
+
+<span class="n">ranking</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">drivers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gene_names</span><span class="p">,</span> <span class="s2">&quot;MEP_corr&quot;</span><span class="p">])</span>
+<span class="n">ranking</span><span class="p">[</span><span class="s2">&quot;ranking&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_names</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ranking</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">20</span><span class="p">,</span> <span class="p">:]</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">y_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;MEP_corr&quot;</span><span class="p">])</span>
+    <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;MEP_corr&quot;</span><span class="p">])</span>
+
+    <span class="n">y_min</span> <span class="o">-=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span>
+    <span class="n">y_max</span> <span class="o">+=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">19.5</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#000000&quot;</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gene</span><span class="p">,</span> <span class="s2">&quot;ranking&quot;</span><span class="p">],</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gene</span><span class="p">,</span> <span class="s2">&quot;MEP_corr&quot;</span><span class="p">],</span>
+            <span class="n">gene</span><span class="p">,</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span>
+            <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+            <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">xticklabels</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;putative_drivers.</span><span class="si">{</span><span class="n">FIGURE_FORMAT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="n">FIGURE_FORMAT</span><span class="p">,</span>
+            <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/88e2031381fe9a189c35f0c23d6b4ab44817d69385071c911522baaeae62454b.png"><img alt="../_images/88e2031381fe9a189c35f0c23d6b4ab44817d69385071c911522baaeae62454b.png" src="../_images/88e2031381fe9a189c35f0c23d6b4ab44817d69385071c911522baaeae62454b.png" style="width: 415px; height: 280px;" />
+</a>
+</div>
+</div>
+<p>ITGA2B: <a class="reference external" href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0043300">https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0043300</a>, <a class="reference external" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7217381/">https://pmc.ncbi.nlm.nih.gov/articles/PMC7217381/</a>, <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1538783623003215">https://www.sciencedirect.com/science/article/pii/S1538783623003215</a>
+VWF: <a class="reference external" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7217381/">https://pmc.ncbi.nlm.nih.gov/articles/PMC7217381/</a>
+PLEK: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1097276520302343">https://www.sciencedirect.com/science/article/pii/S1097276520302343</a></p>
+<p>RGS18: <a class="reference external" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1222126/">https://pmc.ncbi.nlm.nih.gov/articles/PMC1222126/</a>, <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/25405900/">https://pubmed.ncbi.nlm.nih.gov/25405900/</a>
+PIEZO2: <a class="reference external" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5803306/">https://pmc.ncbi.nlm.nih.gov/articles/PMC5803306/</a></p>
+<p>SLC24A3: <a class="reference external" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2225987/">https://pmc.ncbi.nlm.nih.gov/articles/PMC2225987/</a> (platlet = meg derived)
+STXBP5: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1538783623003215">https://www.sciencedirect.com/science/article/pii/S1538783623003215</a></p>
+<p>Double check
+ARHGAP6: <a class="reference external" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6199649/">https://pmc.ncbi.nlm.nih.gov/articles/PMC6199649/</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">GAM</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">cr</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">gene_trends</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+        <span class="n">genes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ITGA2B&quot;</span><span class="p">,</span> <span class="s2">&quot;VWF&quot;</span><span class="p">,</span> <span class="s2">&quot;PLEK&quot;</span><span class="p">,</span> <span class="s2">&quot;RGS18&quot;</span><span class="p">,</span> <span class="s2">&quot;PIEZO2&quot;</span><span class="p">],</span>
+        <span class="n">time_key</span><span class="o">=</span><span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">,</span>
+        <span class="n">hide_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">same_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">cr</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">gene_trends</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+        <span class="n">genes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ITGA2B&quot;</span><span class="p">,</span> <span class="s2">&quot;VWF&quot;</span><span class="p">],</span>
+        <span class="n">time_key</span><span class="o">=</span><span class="s2">&quot;palantir_pseudotime&quot;</span><span class="p">,</span>
+        <span class="n">hide_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">same_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">return_figure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># lineage_cmap=[&quot;#8e063b&quot;, &quot;#f0b98d&quot;, &quot;#d5eae7&quot;, &quot;#f3e1eb&quot;],</span>
+    <span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+        <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;gene_trends.</span><span class="si">{</span><span class="n">FIGURE_FORMAT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="n">FIGURE_FORMAT</span><span class="p">,</span>
+        <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing trends using `1` core(s)
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5c62895ea9e949c49073b814fe75f755", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    Finish (0:00:00)
+Plotting trends
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+DEBUG: Key `None` not found in `adata.obs` or `adata.var_names`. Ignoring`
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/491800e1943083446b0e2dbfbe5f325872df7ac249e37668357371aefb4b2c23.png"><img alt="../_images/491800e1943083446b0e2dbfbe5f325872df7ac249e37668357371aefb4b2c23.png" src="../_images/491800e1943083446b0e2dbfbe5f325872df7ac249e37668357371aefb4b2c23.png" style="width: 942px; height: 936px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span><span class="o">.</span><span class="n">set_terminal_states</span><span class="p">(</span><span class="n">TERMINAL_STATES</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;terminal&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="n">estimator</span><span class="o">.</span><span class="n">plot_macrostates</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">&quot;terminal&quot;</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">legend_loc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="s2">&quot;terminal_states_set.png&quot;</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+            <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG: Raising an exception if there are less than `6` cells.
+Adding `adata.obs[&#39;term_states_fwd&#39;]`
+       `adata.obs[&#39;term_states_fwd_probs&#39;]`
+       `.terminal_states`
+       `.terminal_states_probabilities`
+       `.terminal_states_memberships
+    Finish`
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:656: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  smp = ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/scatter.py:694: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1396: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=bg_size, marker=&quot;.&quot;, c=bg_color, zorder=zord - 2, **kwargs)
+/Users/philipp/miniforge3/envs/crp-py311/lib/python3.11/site-packages/scvelo/plotting/utils.py:1397: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(x, y, s=gp_size, marker=&quot;.&quot;, c=gp_color, zorder=zord - 1, **kwargs)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/8daf75f9cd2c721ac7064e55f9d2a3537529e8cfa63afaa09668eb26c88b03e4.png"><img alt="../_images/8daf75f9cd2c721ac7064e55f9d2a3537529e8cfa63afaa09668eb26c88b03e4.png" src="../_images/8daf75f9cd2c721ac7064e55f9d2a3537529e8cfa63afaa09668eb26c88b03e4.png" style="width: 340px; height: 259px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ptk_tsi</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">_tsi</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
+<span class="n">ct_tsi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;bone_marrow&quot;</span> <span class="o">/</span> <span class="s2">&quot;results&quot;</span> <span class="o">/</span> <span class="s2">&quot;ct_tsi.parquet&quot;</span><span class="p">)</span>
+
+<span class="n">ptk_tsi</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;PseudotimeKernel&quot;</span>
+<span class="n">ct_tsi</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CytoTRACEKernel&quot;</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">ptk_tsi</span><span class="p">,</span> <span class="n">ct_tsi</span><span class="p">])</span>
+
+<span class="n">palette</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;PseudotimeKernel&quot;</span><span class="p">:</span> <span class="s2">&quot;#0173B2&quot;</span><span class="p">,</span> <span class="s2">&quot;CytoTRACEKernel&quot;</span><span class="p">:</span> <span class="s2">&quot;#DE8F05&quot;</span><span class="p">,</span> <span class="s2">&quot;Optimal identification&quot;</span><span class="p">:</span> <span class="s2">&quot;#000000&quot;</span><span class="p">}</span>
+
+<span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;tsi_ranking.</span><span class="si">{</span><span class="n">FIGURE_FORMAT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+    <span class="n">plot_tsi</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">n_macrostates</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/008791f4a1fc82373e6416480f33e0939ae4d2e1b7e99d209f241c41e12cf0be.png"><img alt="../_images/008791f4a1fc82373e6416480f33e0939ae4d2e1b7e99d209f241c41e12cf0be.png" src="../_images/008791f4a1fc82373e6416480f33e0939ae4d2e1b7e99d209f241c41e12cf0be.png" style="width: 591px; height: 348px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">palette</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;PseudotimeKernel&quot;</span><span class="p">:</span> <span class="s2">&quot;#DE8F05&quot;</span><span class="p">,</span> <span class="s2">&quot;CytoTRACEKernel&quot;</span><span class="p">:</span> <span class="s2">&quot;#DE8F05&quot;</span><span class="p">,</span> <span class="s2">&quot;Optimal identification&quot;</span><span class="p">:</span> <span class="s2">&quot;#000000&quot;</span><span class="p">}</span>
+
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_tsi</span><span class="p">(</span><span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/6e87efd57075d5d91d4bb09dbaddea1825fb0a21b95cc4dd5c1df389e6f8070b.png"><img alt="../_images/6e87efd57075d5d91d4bb09dbaddea1825fb0a21b95cc4dd5c1df389e6f8070b.png" src="../_images/6e87efd57075d5d91d4bb09dbaddea1825fb0a21b95cc4dd5c1df389e6f8070b.png" style="width: 469px; height: 348px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span><span class="o">.</span><span class="n">compute_fate_probabilities</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+    <span class="n">estimator</span><span class="o">.</span><span class="n">plot_fate_probabilities</span><span class="p">(</span><span class="n">same_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+    <span class="n">bdata</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">bdata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">estimator</span><span class="o">.</span><span class="n">fate_probabilities</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">fate_probabilities</span><span class="o">.</span><span class="n">X</span>
+
+    <span class="k">for</span> <span class="n">lineage</span> <span class="ow">in</span> <span class="n">estimator</span><span class="o">.</span><span class="n">fate_probabilities</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">mplscience</span><span class="o">.</span><span class="n">style_context</span><span class="p">():</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+            <span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">bdata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s2">&quot;umap&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">lineage</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+                <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lineage</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_fate_terminal_set.png&quot;</span><span class="p">,</span>
+                <span class="n">dpi</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+                <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">bdata</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing fate probabilities
+DEBUG: Solving the linear system using `PETSc` solver `&#39;gmres&#39;` on `1` core(s) with no preconditioner and `tol=1e-06`
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1ae35c2182bf44d2a6f3dd47c9647ec1", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Adding `adata.obsm[&#39;lineages_fwd&#39;]`
+       `.fate_probabilities`
+    Finish (0:00:00)
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/47b050f159119da5c509fe5e25f81ebe7831236375f6fe5d3f980b98fb697880.png"><img alt="../_images/47b050f159119da5c509fe5e25f81ebe7831236375f6fe5d3f980b98fb697880.png" src="../_images/47b050f159119da5c509fe5e25f81ebe7831236375f6fe5d3f980b98fb697880.png" style="width: 1286px; height: 283px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_key</span> <span class="o">=</span> <span class="s2">&quot;celltype&quot;</span>
+<span class="n">rep</span> <span class="o">=</span> <span class="s2">&quot;X_pca&quot;</span>
+
+<span class="n">ptk_cbc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">STATE_TRANSITIONS</span><span class="p">):</span>
+    <span class="n">_cbc</span> <span class="o">=</span> <span class="n">ptk</span><span class="o">.</span><span class="n">cbc</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">cluster_key</span><span class="o">=</span><span class="n">cluster_key</span><span class="p">,</span> <span class="n">rep</span><span class="o">=</span><span class="n">rep</span><span class="p">)</span>
+
+    <span class="n">ptk_cbc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;state_transition&quot;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">_cbc</span><span class="p">),</span>
+                <span class="s2">&quot;cbc&quot;</span><span class="p">:</span> <span class="n">_cbc</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+<span class="n">ptk_cbc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">ptk_cbc</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">SAVE_RESULTS</span><span class="p">:</span>
+    <span class="n">ptk_cbc</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;bone_marrow&quot;</span> <span class="o">/</span> <span class="s2">&quot;results&quot;</span> <span class="o">/</span> <span class="s2">&quot;palantir_cbc.parquet&quot;</span><span class="p">)</span>
+
+<span class="n">ptk_cbc</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 8/8 [00:00&lt;00:00, 12.67it/s]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state_transition</th>
+      <th>cbc</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>HSC - MEP</td>
+      <td>0.682481</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>HSC - MEP</td>
+      <td>0.612722</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>HSC - MEP</td>
+      <td>0.715823</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>HSC - MEP</td>
+      <td>0.520870</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>HSC - MEP</td>
+      <td>0.850975</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ctk_cbc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;bone_marrow&quot;</span> <span class="o">/</span> <span class="s2">&quot;results&quot;</span> <span class="o">/</span> <span class="s2">&quot;ct_cbc.parquet&quot;</span><span class="p">)</span>
+<span class="n">cbc_ratio</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;Log ratio&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">ptk_cbc</span><span class="p">[</span><span class="s2">&quot;cbc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ctk_cbc</span><span class="p">[</span><span class="s2">&quot;cbc&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="s2">&quot;State transition&quot;</span><span class="p">:</span> <span class="n">ptk_cbc</span><span class="p">[</span><span class="s2">&quot;state_transition&quot;</span><span class="p">]}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ttest_res</span><span class="p">,</span> <span class="n">significances</span> <span class="o">=</span> <span class="n">get_ttest_res</span><span class="p">(</span><span class="n">cbc_ratio</span><span class="p">)</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">get_palette</span><span class="p">(</span><span class="n">significances</span><span class="o">=</span><span class="n">significances</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">SAVE_FIGURES</span><span class="p">:</span>
+    <span class="n">fpath</span> <span class="o">=</span> <span class="n">FIG_DIR</span> <span class="o">/</span> <span class="s2">&quot;pseudotimekernel&quot;</span> <span class="o">/</span> <span class="s2">&quot;cbc_ratio.svg&quot;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">fpath</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">plot_cbc_ratio</span><span class="p">(</span><span class="n">cbc</span><span class="o">=</span><span class="n">cbc_ratio</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">fpath</span><span class="o">=</span><span class="n">fpath</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/92dc29eb1f4023bed5af6f7595c39721072656601668abfe37da4cd9e8401f84.png"><img alt="../_images/92dc29eb1f4023bed5af6f7595c39721072656601668abfe37da4cd9e8401f84.png" src="../_images/92dc29eb1f4023bed5af6f7595c39721072656601668abfe37da4cd9e8401f84.png" style="width: 950px; height: 324px;" />
+</a>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./pseudotime"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="preprocessing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Human hematopoiesis - data preprocessing</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../realtime/cellrank.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Inferring transition probabilities from time-resolved single-cell data</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#library-imports">Library imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-settings">General settings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constants">Constants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-definitions">Function definitions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-loading">Data loading</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudotimekernel">PseudotimeKernel</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel">Kernel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#estimator">Estimator</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Philipp Weiler
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
