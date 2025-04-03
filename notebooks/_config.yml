@@ -1,9 +1,9 @@
-title: Single-cell analysis repository
+title: CellRank protocol
 author: Philipp Weiler
 execute:
     execute_notebooks: "off"
 
 repository:
-    url: https://github.com/WeilerP/sc_analysis_template
+    url: https://github.com/theislab/cellrank_protocol
 html:
     use_repository_button: true

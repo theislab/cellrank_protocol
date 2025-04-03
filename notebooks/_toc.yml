@@ -3,4 +3,18 @@ root: index
 parts:
     - caption: Template
       chapters:
-          - file: template
+
+    - caption: CytoTRACEKernel
+      chapters:
+          - file: cytrotrace/cellrank
+    - caption: PseudotimeKernel
+      chapters:
+          - file: pseudotime/preprocessing
+          - file: pseudotime/cellrank
+    - caption: RealTimeKernel
+      chapters:
+          - file: realtime/cellrank
+    - caption: VelocityKernel
+      chapters:
+          - file: velocity/preprocessing
+          - file: velocity/cellrank
