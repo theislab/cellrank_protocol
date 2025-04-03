@@ -2,6 +2,15 @@
 # # Application of the VelocityKernel
 #
 # In this analysis, we infer cell-cell transition probabilities using the VelocityKernel and show how to combine two kernels.
+#
+# The corresponding data can be generated through the preprocessing notebooks `velocity/preprocessing.ipynb`, or
+# downloaded driectly from [here](https://figshare.com/ndownloader/files/53395004) and should be
+# saved in `data/spermatogenesis/processed/adata.h5ad`, _i.e._,
+#
+# ```bash
+# mkdir -p ../../data/spermatogenesis/processed/
+# wget https://figshare.com/ndownloader/files/53395004 -O ../../data/spermatogenesis/processed/adata.h5ad
+# ```
 
 # %% [markdown]
 # ## Library imports
