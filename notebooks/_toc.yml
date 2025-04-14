@@ -3,7 +3,7 @@ root: index
 parts:
     - caption: CytoTRACEKernel
       chapters:
-          - file: cytrotrace/cellrank
+          - file: cytotrace/cellrank
     - caption: PseudotimeKernel
       chapters:
           - file: pseudotime/preprocessing
