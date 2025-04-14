@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Human hematopoiesis - data preprocessing" href="pseudotime/preprocessing.html" />
+    <link rel="next" title="Human hematopoiesis analysis with the CytoTRACEKernel" href="cytotrace/cellrank.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -174,7 +174,11 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">PseudotimeKernel</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">CytoTRACEKernel</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cytotrace/cellrank.html">Human hematopoiesis analysis with the CytoTRACEKernel</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PseudotimeKernel</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pseudotime/preprocessing.html">Human hematopoiesis - data preprocessing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pseudotime/cellrank.html">Human hematopoiesis analysis with the PseudotimeKernel</a></li>
@@ -364,13 +368,19 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="cellrank-protocols">
 <h1>CellRank protocols<a class="headerlink" href="#cellrank-protocols" title="Link to this heading">#</a></h1>
-<p>This repository provides the protocols and corresponding preprocessing for CellRank-based trajectory inference.</p>
+<p>This repository provides the protocols and corresponding preprocessing for CellRank-based trajectory inference. Data
+used in the different use cases is made available in <a class="reference external" href="https://doi.org/10.6084/m9.figshare.c.7752290.v1">this</a>
+figshare collection.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>To install the software required for running the protocols, we suggest the following workflow</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>crp-py311<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11<span class="w"> </span>--yes<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>crp-py311
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>cellrank
 
-pip<span class="w"> </span>install<span class="w"> </span>jupyterlab<span class="w"> </span>ipywidgets
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/theislab/cellrank_protocol.git
+<span class="nb">cd</span><span class="w"> </span>cellrank_protocol
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[jupyter]&quot;</span>
+
 python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>--name<span class="w"> </span>crp-py311<span class="w"> </span>--display-name<span class="w"> </span><span class="s2">&quot;crp-py311&quot;</span>
 </pre></div>
 </div>
@@ -416,11 +426,11 @@ python<span class="w"> </span>-m<span class="w"> </span>ipykernel<span class="w"
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="pseudotime/preprocessing.html"
+       href="cytotrace/cellrank.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Human hematopoiesis - data preprocessing</p>
+        <p class="prev-next-title">Human hematopoiesis analysis with the CytoTRACEKernel</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
