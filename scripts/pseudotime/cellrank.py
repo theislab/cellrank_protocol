@@ -366,20 +366,6 @@ with mplscience.style_context():
         )
     plt.show()
 
-# %% [markdown]
-# ITGA2B: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0043300, https://pmc.ncbi.nlm.nih.gov/articles/PMC7217381/, https://www.sciencedirect.com/science/article/pii/S1538783623003215
-# VWF: https://pmc.ncbi.nlm.nih.gov/articles/PMC7217381/
-# PLEK: https://www.sciencedirect.com/science/article/pii/S1097276520302343
-#
-# RGS18: https://pmc.ncbi.nlm.nih.gov/articles/PMC1222126/, https://pubmed.ncbi.nlm.nih.gov/25405900/
-# PIEZO2: https://pmc.ncbi.nlm.nih.gov/articles/PMC5803306/
-#
-# SLC24A3: https://pmc.ncbi.nlm.nih.gov/articles/PMC2225987/ (platlet = meg derived)
-# STXBP5: https://www.sciencedirect.com/science/article/pii/S1538783623003215
-#
-# Double check
-# ARHGAP6: https://pmc.ncbi.nlm.nih.gov/articles/PMC6199649/
-
 # %%
 model = cr.models.GAM(adata)
 
