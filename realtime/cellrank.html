@@ -375,7 +375,7 @@ document.write(`
 <h1>Inferring transition probabilities from time-resolved single-cell data<a class="headerlink" href="#inferring-transition-probabilities-from-time-resolved-single-cell-data" title="Link to this heading">#</a></h1>
 <p>Here, we show how to infer cell-cell transition probabilities, using the RealTimeKernel. The required data can be downloaded <a class="reference external" href="https://figshare.com/ndownloader/files/53395853">here</a> from FigShare. The data is expected to be in <code class="docutils literal notranslate"><span class="pre">data/larry/processed/</span></code>, <em>i.e.</em>,</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>../../data/larry/processed/
-wget<span class="w"> </span>https://figshare.com/ndownloader/files/53395853<span class="w"> </span>-O<span class="w"> </span>../../data/larry/processed/adata.h5ad
+wget<span class="w"> </span>https://figshare.com/ndownloader/files/56386622<span class="w"> </span>-O<span class="w"> </span>../../data/larry/processed/adata.zarr.zip
 </pre></div>
 </div>
 <section id="library-imports">
@@ -444,7 +444,7 @@ wget<span class="w"> </span>https://figshare.com/ndownloader/files/53395853<span
 <h2>Data loading<a class="headerlink" href="#data-loading" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_zarr</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="o">/</span> <span class="n">DATASET</span> <span class="o">/</span> <span class="s2">&quot;processed&quot;</span> <span class="o">/</span> <span class="s2">&quot;adata.zarr&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_zarr</span><span class="p">(</span><span class="n">DATA_DIR</span> <span class="o">/</span> <span class="n">DATASET</span> <span class="o">/</span> <span class="s2">&quot;processed&quot;</span> <span class="o">/</span> <span class="s2">&quot;adata.zarr.zip&quot;</span><span class="p">)</span>
 <span class="n">adata</span>
 </pre></div>
 </div>
