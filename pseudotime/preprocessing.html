@@ -512,7 +512,7 @@ extracting highly variable genes
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing PCA
     with n_comps=50
-    finished (0:00:01)
+    finished (0:00:00)
 computing neighbors
     using &#39;X_pca&#39; with n_pcs = 50
     finished (0:00:02)
@@ -528,7 +528,7 @@ computing neighbors
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>computing UMAP
-    finished (0:00:06)
+    finished (0:00:05)
 </pre></div>
 </div>
 </div>
@@ -553,7 +553,7 @@ computing neighbors
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/006842f2fd4f073a3eefd31c60c173cce4c3a60280cf9a578aca7209344ce195.png"><img alt="../_images/006842f2fd4f073a3eefd31c60c173cce4c3a60280cf9a578aca7209344ce195.png" src="../_images/006842f2fd4f073a3eefd31c60c173cce4c3a60280cf9a578aca7209344ce195.png" style="width: 390px; height: 380px;" />
+<a class="reference internal image-reference" href="../_images/f246455b62111b5acf49a9ffaaf7bf3ee087de0a699082e4e172be804fbf28d7.png"><img alt="../_images/f246455b62111b5acf49a9ffaaf7bf3ee087de0a699082e4e172be804fbf28d7.png" src="../_images/f246455b62111b5acf49a9ffaaf7bf3ee087de0a699082e4e172be804fbf28d7.png" style="width: 390px; height: 380px;" />
 </a>
 </div>
 </div>
@@ -589,7 +589,7 @@ computing neighbors
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/8d02f5216117fc3add089d1ce46f984eba6e3b40bc16f485985ae3b82cb67056.png"><img alt="../_images/8d02f5216117fc3add089d1ce46f984eba6e3b40bc16f485985ae3b82cb67056.png" src="../_images/8d02f5216117fc3add089d1ce46f984eba6e3b40bc16f485985ae3b82cb67056.png" style="width: 390px; height: 259px;" />
+<a class="reference internal image-reference" href="../_images/7501e0a72f61825f27d0c640779d2f99d1d432b7bf7e3a2a32da33952dd70a47.png"><img alt="../_images/7501e0a72f61825f27d0c640779d2f99d1d432b7bf7e3a2a32da33952dd70a47.png" src="../_images/7501e0a72f61825f27d0c640779d2f99d1d432b7bf7e3a2a32da33952dd70a47.png" style="width: 390px; height: 259px;" />
 </a>
 </div>
 </div>
@@ -597,13 +597,6 @@ computing neighbors
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># multiscale space</span>
 <span class="n">multiscale_space</span> <span class="o">=</span> <span class="n">palantir</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">determine_multiscale_space</span><span class="p">(</span><span class="n">diff_maps</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">magic_imputed</span> <span class="o">=</span> <span class="n">palantir</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">run_magic_imputation</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">diff_maps</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -618,7 +611,7 @@ computing neighbors
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/1b0538d5dc36dbaca610bfd996475ae648d559f4cab6f46d08b858ba2ea22612.png"><img alt="../_images/1b0538d5dc36dbaca610bfd996475ae648d559f4cab6f46d08b858ba2ea22612.png" src="../_images/1b0538d5dc36dbaca610bfd996475ae648d559f4cab6f46d08b858ba2ea22612.png" style="width: 515px; height: 276px;" />
+<a class="reference internal image-reference" href="../_images/4237e582d7d94607fcdcfeb38bc2f414dde13aa356d975413a53a0189ca85130.png"><img alt="../_images/4237e582d7d94607fcdcfeb38bc2f414dde13aa356d975413a53a0189ca85130.png" src="../_images/4237e582d7d94607fcdcfeb38bc2f414dde13aa356d975413a53a0189ca85130.png" style="width: 515px; height: 276px;" />
 </a>
 </div>
 </div>
@@ -632,12 +625,12 @@ computing neighbors
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sampling and flocking waypoints...
-Time for determining waypoints: 0.0016420483589172363 minutes
+Time for determining waypoints: 0.000851603349049886 minutes
 Determining pseudotime...
 Shortest path distances using 30-nearest neighbor graph...
-Time for shortest paths: 0.17764938672383626 minutes
+Time for shortest paths: 0.06112736860911051 minutes
 Iteratively refining the pseudotime...
-Correlation at iteration 1: 0.9995
+Correlation at iteration 1: 0.9996
 Correlation at iteration 2: 1.0000
 Entropy and branch probabilities...
 Markov chain construction...
@@ -661,7 +654,7 @@ Project results to all cells...
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/7654139e118400315e025b4a192c94e6715880f699dbbee397ac301fb5e47e0a.png"><img alt="../_images/7654139e118400315e025b4a192c94e6715880f699dbbee397ac301fb5e47e0a.png" src="../_images/7654139e118400315e025b4a192c94e6715880f699dbbee397ac301fb5e47e0a.png" style="width: 527px; height: 283px;" />
+<a class="reference internal image-reference" href="../_images/cd665afbd8c145e9fce179680446ad1da8f2f8f362ea52f2aa844abb3401db3b.png"><img alt="../_images/cd665afbd8c145e9fce179680446ad1da8f2f8f362ea52f2aa844abb3401db3b.png" src="../_images/cd665afbd8c145e9fce179680446ad1da8f2f8f362ea52f2aa844abb3401db3b.png" style="width: 527px; height: 283px;" />
 </a>
 </div>
 </div>
