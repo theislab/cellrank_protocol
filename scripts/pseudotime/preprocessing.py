@@ -124,9 +124,6 @@ with mplscience.style_context():
 multiscale_space = palantir.utils.determine_multiscale_space(diff_maps)
 
 # %%
-magic_imputed = palantir.utils.run_magic_imputation(adata, diff_maps)
-
-# %%
 root_idx = 3290  # adata.obsm["X_diffmap"][:, 2].argmin()
 with mplscience.style_context():
     scv.pl.scatter(adata, basis="diffmap", color=["celltype", root_idx], legend_loc="right", components="1, 2", size=25)
