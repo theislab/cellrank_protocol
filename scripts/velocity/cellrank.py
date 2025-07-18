@@ -9,7 +9,7 @@
 #
 # ```bash
 # mkdir -p ../../data/spermatogenesis/processed/
-# wget https://figshare.com/ndownloader/files/53395004 -O ../../data/spermatogenesis/processed/adata.h5ad
+# wget https://figshare.com/ndownloader/files/53395040 -O ../../data/spermatogenesis/processed/adata.h5ad
 # ```
 
 # %% [markdown]
