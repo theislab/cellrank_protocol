@@ -15,9 +15,9 @@ authors = [
 maintainers = [
     {name = "Philipp Weiler", email = "philipp.weiler@tum.de"},
 ]
-urls.Documentation = "https://todo.com"  # TODO
-urls.Source = "https://github.com/WeilerP/cellrank_protocol.git"
-urls.Home-page = "https://github.com/WeilerP/cellrank_protocol.git"
+urls.Documentation = "https://github.com/theislab/cellrank_protocol"
+urls.Source = "https://github.com/theislab/cellrank_protocol.git"
+urls.Home-page = "https://github.com/theislab/cellrank_protocol.git"
 dependencies = [
     "anndata",
     "scanpy",
