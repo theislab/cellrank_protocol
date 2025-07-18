@@ -5,7 +5,7 @@
 #
 # ```bash
 # mkdir -p ../../data/larry/processed/
-# wget https://figshare.com/ndownloader/files/53395853 -O ../../data/larry/processed/adata.h5ad
+# wget https://figshare.com/ndownloader/files/56386622 -O ../../data/larry/processed/adata.zarr.zip
 # ```
 
 # %% [markdown]
@@ -54,7 +54,7 @@ FIGURE_FORMATE = "svg"
 # ## Data loading
 
 # %%
-adata = ad.io.read_zarr(DATA_DIR / DATASET / "processed" / "adata.zarr")
+adata = ad.io.read_zarr(DATA_DIR / DATASET / "processed" / "adata.zarr.zip")
 adata
 
 # %%
