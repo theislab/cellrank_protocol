@@ -207,8 +207,17 @@ with mplscience.style_context():
     plt.show()
 
 # %%
+print(f"Identified macrostates: {', '.join(estimator.macrostates.cat.categories.sort_values())}")
+
+# %%
 estimator.set_terminal_states(["Ery_1", "CLP", "pDC_1", "cDC_1", "Mono"])
 estimator.rename_terminal_states({"Ery_1": "Ery", "pDC_1": "pDC", "cDC_1": "cDC"})
+
+celltype_palette = dict(zip(adata.obs["celltype"].cat.categories, adata.uns["celltype_colors"]))
+terminal_state_colors = [
+    celltype_palette[terminal_state] for terminal_state in estimator.adata.obs["term_states_fwd"].cat.categories
+]
+estimator._term_states = estimator._term_states.set(colors=terminal_state_colors)
 
 with mplscience.style_context():
     estimator.plot_macrostates(which="terminal", basis="umap", legend_loc="right", title="", size=100)
