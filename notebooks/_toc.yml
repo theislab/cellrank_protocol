@@ -15,3 +15,4 @@ parts:
       chapters:
           - file: velocity/preprocessing
           - file: velocity/cellrank
+          - file: metabolic_labeling/inference.ipynb
